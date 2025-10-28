@@ -26,6 +26,7 @@ void rotateMatrix(std::vector<std::vector<int>>& array) {
       int offset = i - first;
       int top = array[first][i]; // save top
 
+      // 
       array[first][i] = array[last-offset][first];
 
       array[last-offset][first] = array[last][last-offset];
