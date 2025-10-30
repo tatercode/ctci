@@ -8,7 +8,12 @@ LinkedList::LinkedList() : head(nullptr) {}
 
 LinkedList::~LinkedList() {
     ListNode* current = head;
+    std::unordered_set<ListNode*> visited;
     while (current != nullptr) {
+        if (visited.count(current)) {
+            break;
+        }
+        visited.insert(current);
         ListNode* next = current->next;
         delete current;
         current = next;
@@ -28,6 +33,33 @@ void LinkedList::insert(int val) {
     }
 
     temp->next = new ListNode(val);
+}
+
+void LinkedList::insertDupe(ListNode* node) {
+  ListNode* current = head;
+
+  while (current->next) {
+    current = current->next;
+  }
+
+  current->next = node;
+}
+
+ListNode* LinkedList::getNode(int pos) {
+  if (pos < 1) {
+    return head;
+  }
+  ListNode* current = head;
+
+  while (pos != 0) {
+    // If invalid position just return head
+    if (!current) {
+      return head; 
+    }
+    --pos;
+    current = current->next;
+  }
+  return current;
 }
 
 void LinkedList::printList() {
@@ -76,13 +108,59 @@ void LinkedList::removeDupsNoBuff() {
   }
 }
 
+// O(n) time O(1) space
+bool LinkedList::loopDetection() {
+  if (!head || !head->next) return false;
+  ListNode* current = head;
+  ListNode* runner = head->next;
 
+  while (runner && runner->next) {
+    if (current == runner) {
+      return true;
+    }
+    current = current->next;
+    runner = runner->next->next;
+  }  
 
+  return false;
+}
 
+ListNode* LinkedList::kthToLast(int k) {
+  // Handle edge cases for an empty list or invalid k.
+  if (head == nullptr || k < 1) {
+    return nullptr;
+  }
 
+  ListNode* p1 = head;
+  ListNode* p2 = head;
 
+  // Move p2 k nodes into the list.
+  for (int i = 0; i < k; ++i) {
+    if (p2 == nullptr) {
+      return nullptr; // k is larger than the size of the list.
+    }
+    p2 = p2->next;
+  }
 
+  // Move p1 and p2 at the same pace. When p2 reaches the end,
+  // p1 will be at the k-th to last element.
+  while (p2 != nullptr) {
+    p1 = p1->next;
+    p2 = p2->next;
+  }
 
+  return p1;
+}
 
+void LinkedList::deleteMiddleNode(ListNode* node) {
+  if (!node || !node->next) {
+    return;
+  }
 
+  ListNode* next = node->next;
+  node->val = next->val;
+  node->next = next->next;
 
+  delete next;
+  return; 
+}
