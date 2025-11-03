@@ -71,6 +71,14 @@ void LinkedList::printList() {
     std::cout << "null" << std::endl;
 }
 
+void LinkedList::printList(ListNode* temp) {
+    while (temp != nullptr) {
+        std::cout << temp->val << "->";
+        temp = temp->next;
+    }
+    std::cout << "null" << std::endl;
+}
+
 // O(n)
 void LinkedList::removeDups() {
   ListNode* temp = head;
@@ -164,3 +172,69 @@ void LinkedList::deleteMiddleNode(ListNode* node) {
   delete next;
   return; 
 }
+
+void LinkedList::partition(int val) {
+    ListNode* before_start = nullptr;
+    ListNode* before_end = nullptr;
+    ListNode* after_start = nullptr;
+    ListNode* after_end = nullptr;
+    ListNode* node = head;
+
+    while (node != nullptr) {
+        ListNode* next = node->next;
+        node->next = nullptr; // detach from list
+        if (node->val < val) {
+            if (before_start == nullptr) { // assign start of list
+                before_start = node;
+                before_end = before_start;
+            } else { // always assign to end next
+                before_end->next = node;
+                before_end = node;
+            }
+        } else {
+            if (after_start == nullptr) {
+                after_start = node;
+                after_end = after_start;
+            } else {
+                after_end->next = node;
+                after_end = node;
+            }
+        }
+        node = next;
+    }
+
+    // special case no val < partition val
+    if (before_start == nullptr) {
+        head = after_start;
+        return;
+    }
+
+    before_end->next = after_start;
+    head = before_start;
+}
+
+ListNode* LinkedList::sumLists(ListNode* node1, ListNode* node2, int carry) {
+    if (!node1 && !node2 && carry == 0) {
+        return nullptr;
+    }
+
+    int value = carry;
+    if (node1) 
+        value += node1->val;
+    
+    if (node2) 
+        value += node2->val;
+    
+
+    ListNode* result = new ListNode(value % 10);
+
+    if (node1 || node2) {
+        ListNode* more = sumLists(node1 ? node1->next : nullptr,
+                                  node2 ? node2->next : nullptr,
+                                  value >= 10 ? 1 : 0);
+        result->next = more;
+    }
+
+    return result;
+}
+

@@ -51,14 +51,24 @@ int main() {
   list2.deleteMiddleNode(midOfList);
   list2.printList();
 
+  list.partition(15);
 
+  list.printList();
+
+  LinkedList add1;
+  add1.insert(3);
+  add1.insert(4);
+  add1.insert(5);
+
+  LinkedList add2;
+  add2.insert(5);
+  add2.insert(8);
+  add2.insert(3);
+
+  ListNode* sum = add1.sumLists(add1.getNode(0), add2.getNode(0), 0);
+
+  add1.printList(sum);
 
   return 0;
 }
-
-
-
-
-
-
 
